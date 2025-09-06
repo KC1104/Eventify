@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventify</title>
+    <link rel="stylesheet" href="../public/index.css">
+    <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+    <nav>
+        <div class="flex-container">
+            <div class="name">
+                <img src="/calender.jpg" alt="calender image">
+                <p id="name">Eventify</p>
+            </div>
+            <div class="links">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="/Login">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="home-content">
+            <div class="texts">
+                <h1 class="text" id="text-h1">Manage Your Events Efficiently </h1>
+                <h4 class="text" id="text-h4">A platform to create and manage events seamlessly </h4>
+                <button><a href="/Login">Get Started</a></button>
+            </div>
+            <div class="home-image">
+                <img src="/manage.jpg" alt="Photo">
+            </div>
+        </div>
+    </section>
+
+    <section id="events">
+        <h3>Upcoming Events</h3>
+        <div class="grid-container">
+            <% events.forEach(event=> { %>
+            <div class="row">
+                <div class="date">
+                    <p><%= event.day %></p>
+                    <p><%= event.month %></p>
+                </div>
+                <div class="event-content">
+                    <h4><%= event.title %></h4>
+                    <p><%= event.description %></p>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+        <button id="event-view"><a href="/Login">View All</a></button>
+    </section>
+
+    <section id="about">
+        <h3>About Us</h3>
+        <div class="img-left about-card">
+            <div class="about-img">
+                <img src="/about manage.jpg" alt="manage events">
+            </div>
+            <div class="about-content">
+                <h2>Manage your events like a pro</h2>
+                <p>Easily plan, schedule, and monitor all your events in one place. From creating new events to tracking
+                    ongoing ones, our platform gives you complete control to stay organised and stress-free.
+                </p>
+            </div>
+        </div>
+
+        <div class="img-right about-card">
+            <div class="about-content">
+                <h2>Seamless Student Registration</h2>
+                <p>Say goodbye to messy spreadsheets and manual tracking. Students can register or unregister for events
+                    with just a click, while organisers get instant updates on participation.
+                </p>
+            </div>
+            <div class="about-img">
+                <img src="/about registration.webp" alt="Seamless registration">
+            </div>
+        </div>
+
+        <div class="img-left about-card">
+            <div class="about-img">
+                <img src="/about organiser.jpg" alt="manage events">
+            </div>
+            <div class="about-content">
+                <h2>Empower Organiser with Smart Tools</h2>
+                <p>Access a powerful set of features designed to make organising effortless. Create events, manage
+                    attendees, and analyse participation trends — all from a simple, user-friendly dashboard.
+                </p>
+            </div>
+        </div>
+
+        <div class="img-right about-card">
+            <div class="about-content">
+                <h2>Stay Updated, Anytime Anywhere</h2>
+                <p>Whether you’re a student or an organiser, you’ll always have access to real-time updates. Check
+                    upcoming events, track your registrations, and never miss out on opportunities again.
+                </p>
+            </div>
+            <div class="about-img">
+                <img src="/about updated.jpg" alt="Seamless registration">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2>Eventify</h2>
+                <p>Making your events memorable.</p>
+            </div>
+
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="/Login">Register</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h3>Contact</h3>
+                <p>Email: info@eventify.com</p>
+                <p>Phone: +91 12345 67890</p>
+                <div class="social-icons">
+                    <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
+                    <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
+                    <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Eventify. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

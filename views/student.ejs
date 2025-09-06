@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/student.css">
+</head>
+
+<body>
+  <div class="view">
+
+    <div class="sidebar">
+      <div class="head-content">
+        <h1 id="username">Hey <%= username %>
+        </h1>
+      </div>
+      <div class="btn-group">
+        <ul>
+          <li><button onclick="showSection('upcoming')">Upcoming Events</button></li>
+          <li><button onclick="showSection('registered')">Registered Events</button></li>
+          <li><button onclick="showSection('about')">About</button></li>
+        </ul>
+      </div>
+      <div class="logout">
+        <form action="/logout" method="post">
+          <button type="submit">Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <section class="head">
+        <div class="container">
+          <div class="head-content">
+            <h1 id="head-text">Discover.Register.Participate</h1>
+            <p>Step into a world of opportunities, right from your dashboard.</p>
+          </div>
+          <div class="head-img">
+            <img src="/student.png" alt="student photo">
+          </div>
+        </div>
+      </section>
+
+      <section class="all-events dashboard-section" id="upcoming">
+        <h2 class="section-title">Upcoming Events</h2>
+        <% events.forEach(event=> { %>
+
+          <div class="card">
+            <div class="date">
+              <p>
+                <%= event.day %>
+              </p>
+              <p>
+                <%= event.month %>
+              </p>
+            </div>
+            <div class="event-content">
+              <h4>
+                <%= event.title %>
+              </h4>
+              <p>
+                <%= event.description %>
+              </p>
+              <a href="javascript:void(0)"
+                onclick="showDetails('<%= event.title %>', '<%= event.event_date.toDateString() %>', '<%= event.description %>', '<%= event.organiser_name %>')">
+                View Event Details →
+              </a>
+              <form method="post" action="/registerEvent">
+                <input type="hidden" name="event_id" value="<%= event.event_id %>">
+                <button type="submit" class="register-btn">Register</button>
+              </form>
+            </div>
+          </div>
+          <% }) %>
+      </section>
+
+      <section class="registered dashboard-section" id="registered">
+        <h2 class="section-title">Your Registered Events: <%= count %>
+        </h2>
+        <% r_events.forEach(event=> { %>
+
+          <div class="card">
+            <div class="date">
+              <p>
+                <%= event.day %>
+              </p>
+              <p>
+                <%= event.month %>
+              </p>
+            </div>
+            <div class="event-content">
+              <h4>
+                <%= event.title %>
+              </h4>
+              <p>
+                <%= event.description %>
+              </p>
+              <a href="javascript:void(0)"
+                onclick="showDetails('<%= event.title %>', '<%= event.event_date.toDateString() %>', '<%= event.description %>', '<%= event.organiser_name %>')">
+                View Event Details →
+              </a>
+              <form method="post" action="/unregisterEvent">
+                <input type="hidden" name="event_id" value="<%= event.event_id %>">
+                <button type="submit" class="register-btn">Unregister</button>
+              </form>
+            </div>
+          </div>
+          <% }) %>
+      </section>
+
+      <section class="about dashboard-section" id="about">
+        <h2 class="section-title">About Eventify</h2>
+
+        <p><strong>Eventify</strong> is your one-stop platform to <span class="highlight">DISCOVER</span>, <span
+            class="highlight">REGISTER</span>, and <span class="highlight">PARTICIPATE</span> in exciting
+          campus events. Whether it’s workshops, hackathons, seminars, or cultural fests, we make it simple
+          for you to stay updated and get involved.</p>
+
+        <p>With an easy-to-use dashboard, you can:</p>
+        <ul>
+          <li>Browse upcoming events tailored for students</li>
+          <li>Register and track your participation in real-time</li>
+          <li>Manage your registered and past events effortlessly</li>
+        </ul>
+
+        <p>We believe in creating opportunities for learning, networking, and growth. Step into a world of
+          experiences beyond classrooms — all from your dashboard.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <div id="eventModal" class="event-modal">
+    <div class="event-modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDate"></p>
+      <p id="modalDescription"></p>
+      <p><strong>Organised by:</strong> <span id="modalOrganiser"></span></p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast <%= message ? message.type : '' %>">
+        <%= message ? message.text : '' %>
+    </div>
+  <script>
+    function showSection(sectionId) {
+      // hide all sections
+      document.querySelectorAll('.dashboard-section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+
+      // show only the clicked one
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    // show "Upcoming Events" by default
+    showSection('upcoming');
+
+    function showDetails(title, date, description, organiser) {
+      document.getElementById("modalTitle").innerText = title;
+      document.getElementById("modalDate").innerText = "Happening on " + date;
+      document.getElementById("modalDescription").innerText = description;
+      document.getElementById("modalOrganiser").innerText = organiser;
+
+      document.getElementById("eventModal").style.display = "flex"; // show modal
+    }
+
+    function closeModal() {
+      document.getElementById("eventModal").style.display = "none";
+    }
+    const toast = document.getElementById("toast");
+    if (toast && toast.textContent.trim() !== "") {
+      // Trigger animation
+      setTimeout(() => toast.classList.add("show"), 100);
+
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+# Node modules (don’t push this, it’s too big and can be reinstalled)
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables (keep secrets safe)
+.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Optional: if you don’t want to push static HTML files
+*.html

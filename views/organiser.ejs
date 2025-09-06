@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organiser Dashboard</title>
+    <link rel="stylesheet" href="/organiser.css">
+</head>
+
+<body>
+    <div class="view">
+
+        <div class="sidebar">
+            <div class="head-content">
+                <h1 id="username">Hey <%= username %>
+                </h1>
+            </div>
+            <div class="stats">
+                <p>Total Events: <span>
+                        <%= event_count %>
+                    </span></p>
+                <p>Registrations: <span>
+                        <%= total %>
+                    </span></p>
+            </div>
+
+            <div class="btn-group">
+                <ul>
+                    <li><button onclick="showSection('all')">All Events</button></li>
+                    <li><button onclick="showSection('registered')">Your Events</button></li>
+                    <li><button onclick="showSection('create')">Register Event</button></li>
+                    <li><button onclick="showSection('about')">About</button></li>
+                </ul>
+            </div>
+            <div class="logout">
+                <form action="/logout" method="post">
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <section class="head">
+                <div class="container">
+                    <div class="head-content">
+                        <h1 id="head-text">Organize with Ease, Engage with Impact.</h1>
+                        <p>Manage your events effortlessly and keep your audience connected.</p>
+                    </div>
+                    <div class="head-img">
+                        <img src="/organiser dashboard.png" alt="student photo">
+                    </div>
+                </div>
+            </section>
+
+            <section class="all-events dashboard-section" id="all">
+                <h2 class="section-title">Upcoming Events</h2>
+                <% events.forEach(event=> { %>
+                    <div class="card">
+                        <div class="date">
+                            <p>
+                                <%= event.day %>
+                            </p>
+                            <p>
+                                <%= event.month %>
+                            </p>
+                        </div>
+                        <div class="event-content">
+                            <h4>
+                                <%= event.title %>
+                            </h4>
+                            <p>
+                                <%= event.description.substring(0, 60) %>...
+                            </p>
+                            <a href="javascript:void(0)"
+                                onclick="showDetails('<%= event.title %>', '<%= event.event_date.toDateString() %>', '<%= event.description %>', '<%= event.organiser_name %>')">
+                                View Event Details →
+                            </a>
+                        </div>
+                    </div>
+                    <% }) %>
+
+            </section>
+
+            <section class="registered dashboard-section" id="registered">
+                <h2 class="section-title">Your Registered Events: <%= event_count %>
+                </h2>
+                <% o_events.forEach(event=> { %>
+                    <div class="card">
+                        <div class="date">
+                            <p>
+                                <%= event.day %>
+                            </p>
+                            <p>
+                                <%= event.month %>
+                            </p>
+                        </div>
+                        <div class="event-content">
+                            <h4>
+                                <%= event.title %>
+                            </h4>
+                            <p>
+                                <%= event.description.substring(0, 60) %>...
+                            </p>
+                            <a href="javascript:void(0)"
+                                onclick="showDetails('<%= event.title %>', '<%= event.event_date.toDateString() %>', '<%= event.description %>', '<%= event.organiser_name %>')">
+                                View Event Details →
+                            </a>
+                            <button class="register-btn" data-id="<%= event.event_id %>" data-title="<%= event.title %>"
+                                data-date="<%= event.event_date.toISOString().slice(0,10) %>"
+                                data-description="<%= event.description %>">
+                                ✎ Edit Event
+                            </button>
+                        </div>
+                    </div>
+                    <% }) %>
+
+            </section>
+
+            <section class="create dashboard-section" id="create">
+                <form action="/postEvent" method="post" class="modern-form">
+                    <div class="form-group">
+                        <input type="text" id="Ename" name="title" required>
+                        <label for="Ename">Event Name</label>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea id="Edesc" name="description" rows="5" required></textarea>
+                        <label for="Edesc">Event Description</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="date" id="date" name="date" required>
+                        <label for="date">Event Date</label>
+                    </div>
+
+
+                    <input type="submit" value="Create Event">
+                </form>
+            </section>
+
+            <section class="about dashboard-section" id="about">
+                <h2 class="section-title">About Eventify</h2>
+
+                <p><strong>Eventify</strong> empowers you to <span class="highlight">CREATE</span>, <span
+                        class="highlight">MANAGE</span>, and <span class="highlight">PROMOTE</span> engaging campus
+                    events with ease. From workshops and hackathons to seminars and cultural fests, we provide all the
+                    tools you need to make your events successful.</p>
+
+                <p>With your organiser dashboard, you can:</p>
+                <ul>
+                    <li>Create and manage events effortlessly</li>
+                    <li>Track registrations and engagement in real-time</li>
+                    <li>Keep your audience informed and connected</li>
+                </ul>
+
+                <p>Our goal is to help you deliver impactful events, streamline event management, and maximize
+                    participation. Take control of your events and make every campus experience memorable — all from
+                    your dashboard.</p>
+
+            </section>
+
+        </div>
+    </div>
+
+    <div id="eventModal" class="event-modal">
+        <div class="event-modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalDate"></p>
+            <p id="modalDescription"></p>
+            <p><strong>Organised by:</strong> <span id="modalOrganiser"></span></p>
+        </div>
+    </div>
+
+    <div id="editEventModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeEditModal()">&times;</button>
+            <h2>Edit Event</h2>
+
+            <form id="editEventForm" method="POST" action="/updateEvent">
+                <input type="hidden" name="event_id" id="editEventId">
+
+                <div class="form-group">
+                    <input type="text" id="editTitle" name="title" required>
+                    <label for="Ename">Event Name</label>
+                </div>
+
+                <div class="form-group">
+                    <textarea id="editDescription" name="description" rows="5" required></textarea>
+                    <label for="Edesc">Event Description</label>
+                </div>
+
+                <div class="form-group">
+                    <input type="date" id="editDate" name="date" required>
+                    <label for="date">Event Date</label>
+                </div>
+                <input type="submit" value="Update Event">
+            </form>
+        </div>
+    </div>
+    <div id="toast" class="toast <%= message ? message.type : '' %>">
+        <%= message ? message.text : '' %>
+    </div>
+    <script>
+        function showSection(sectionId) {
+            // hide all sections
+            document.querySelectorAll('.dashboard-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+
+            // show only the clicked one
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // show "Upcoming Events" by default
+        showSection('create');
+
+        function showDetails(title, date, description, organiser) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDate").innerText = "Happening on " + date;
+            document.getElementById("modalDescription").innerText = description;
+            document.getElementById("modalOrganiser").innerText = organiser;
+
+            document.getElementById("eventModal").style.display = "flex"; // show modal
+        }
+
+        function closeModal() {
+            document.getElementById("eventModal").style.display = "none";
+        }
+
+        document.querySelectorAll(".register-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                document.getElementById("editEventId").value = this.dataset.id;
+                document.getElementById("editTitle").value = this.dataset.title;
+                document.getElementById("editDate").value = this.dataset.date;
+                document.getElementById("editDescription").value = this.dataset.description;
+
+                document.getElementById("editEventModal").style.display = "flex";
+            });
+        });
+
+        // Close modal
+        function closeEditModal() {
+            document.getElementById("editEventModal").style.display = "none";
+        }
+        const toast = document.getElementById("toast");
+        if (toast && toast.textContent.trim() !== "") {
+            // Trigger animation
+            setTimeout(() => toast.classList.add("show"), 100);
+
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>
