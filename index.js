@@ -2,6 +2,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import session from "express-session";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -15,6 +18,7 @@ app.use(session({
     saveUninitialized: false
 }));
 
+/*
 const db = new pg.Client({
     user: "postgres",
     host: "localhost",
@@ -22,8 +26,16 @@ const db = new pg.Client({
     database: "Event_Managment",
     port: 5432
 });
+*/
+const db = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
-db.connect();
+
+db.connect()
+  .then(() => console.log("✅ Connected to Supabase"))
+  .catch(err => console.error("❌ Database connection error", err.stack));
 
 
 app.get("/", async (req, res) => {
