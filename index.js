@@ -18,17 +18,8 @@ app.use(session({
     saveUninitialized: false
 }));
 
-/*
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    password: "K110406#VIR",
-    database: "Event_Managment",
-    port: 5432
-});
-*/
-const db = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL + "?sslmode=require",
     ssl: { rejectUnauthorized: false }
 });
 
